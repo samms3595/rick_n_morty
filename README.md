@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Esta es una API que proporciona información sobre personajes de la serie "Rick and Morty". La API está construida utilizando Node.js, Express, Sequelize, MySql y GraphQL. Los datos se obtienen de la API pública de Rick and Morty y se almacenan en una base de datos MySql. La API también utiliza Redis para el almacenamiento en caché de los resultados de las consultas.
+Esta es una API que proporciona información sobre personajes de la serie "Rick and Morty". La API está construida utilizando Node.js, Express, Sequelize, PostgreSQL y GraphQL. Los datos se obtienen de la API pública de Rick and Morty y se almacenan en una base de datos PostgreSQL. La API también utiliza Redis para el almacenamiento en caché de los resultados de las consultas.
 
 ## Diagrama de Entidad-Relación (ERD)
 
@@ -26,7 +26,7 @@ El diagrama ERD para la base de datos se muestra a continuación:
 ## Requisitos
 
 - Node.js (>= 14.x)
-- Mysql (>= 8.x)
+- PostgreSQL (>= 12.x)
 - Redis (>= 5.x)
 
 ## Instalación
@@ -53,10 +53,10 @@ El diagrama ERD para la base de datos se muestra a continuación:
     DB_USERNAME=tu_usuario
     DB_PASSWORD=tu_contraseña
     DB_HOST=localhost
-    DB_DIALECT=mysql
+    DB_DIALECT=postgres
     ```
 
-4. Inicia los servicios de MySql y Redis si no están ya en ejecución.
+4. Inicia los servicios de PostgreSQL y Redis si no están ya en ejecución.
 
 ## Ejecución
 
@@ -126,3 +126,22 @@ node src/initializers/populateDatabase.js
 La documentación de la API está disponible en la ruta `/api-docs` una vez que el servidor está en ejecución.
 
 Visita [http://localhost:4000/api-docs](http://localhost:4000/api-docs) para ver la documentación interactiva de Swagger.
+
+## Base de datos
+
+Es necesario crear usuario de base de datos para realizar la conexión y que la aplicación funcione correctamente.
+
+```
+create database rick_and_morty;
+use rick_and_morty;
+CREATE USER 'rick'@'localhost' IDENTIFIED BY 'morty';
+GRANT ALL PRIVILEGES ON * . * TO 'rick'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+### Crear el modelo y la migración
+```
+
+npx sequelize-cli model:generate --name Character --attributes name:string,status:string,species:string,gender:string,origin:string,image:string
+npx sequelize-cli db:migrate
+```
